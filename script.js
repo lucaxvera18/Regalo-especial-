@@ -7,38 +7,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const fireworksContainer = document.querySelector('.fireworks-container');
     const starsContainer = document.querySelector('.stars');
 
-    const balloonColors = ['#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff', '#ffc6ff', '#f72585', '#7209b7'];
+    const balloonColors = ['#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff', '#ffc6ff', '#f72585', '#7209b7', '#e63946'];
     const confettiColors = ['#f25478', '#f8a84c', '#fce254', '#84d47c', '#54b4cc', '#6c6ce8', '#a864d4', '#e63946', '#f4a261', '#2a9d8f'];
     const fireworkColors = ['#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845', '#DAF7A6', '#FFC0CB', '#ADD8E6'];
 
     const NUM_BALLOONS = 15; 
     const NUM_CONFETTI = 100;
     const NUM_STARS = 180;
-    const NUM_FIREWORKS = 5; // Número de fuegos artificiales en un ciclo
-    const FIREWORK_PARTICLES = 30; // Partículas por cada fuego artificial
+    const NUM_FIREWORKS = 5;
+    const FIREWORK_PARTICLES = 30;
 
 
     // --- GENERACIÓN DE ELEMENTOS ---
 
-    // Crear globos (caen desde arriba)
+    // Crear globos (con la corrección para que caigan)
     for (let i = 0; i < NUM_BALLOONS; i++) {
         const balloon = document.createElement('div');
+        const string = document.createElement('span');
+        
         balloon.className = 'balloon';
+        string.className = 'balloon-string';
+        
+        balloon.appendChild(string); // Añadir el hilo dentro del globo
+        
         balloon.style.left = `${Math.random() * 95}vw`;
-        balloon.style.setProperty('--x-offset', `${(Math.random() - 0.5) * 50}px`); // Movimiento lateral
-        balloon.style.setProperty('--rotation', `${(Math.random() - 0.5) * 20}deg`); // Rotación
+        balloon.style.top = `${Math.random() * -100}vh`; // <-- CORRECCIÓN: Empezar arriba
+        
+        balloon.style.setProperty('--x-offset', `${(Math.random() - 0.5) * 50}px`);
+        balloon.style.setProperty('--rotation', `${(Math.random() - 0.5) * 30}deg`);
         balloon.style.animationDelay = `${Math.random() * 10}s`;
         balloon.style.animationDuration = `${Math.random() * 10 + 15}s`;
         balloon.style.setProperty('--color', balloonColors[i % balloonColors.length]);
+        
         backgroundElements.appendChild(balloon);
     }
 
-    // Crear confeti (caen desde arriba)
+    // Crear confeti
     for (let i = 0; i < NUM_CONFETTI; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
         confetti.style.left = `${Math.random() * 100}vw`;
-        confetti.style.top = `${Math.random() * -100}vh`; // Empiezan fuera de la pantalla
+        confetti.style.top = `${Math.random() * -100}vh`;
         confetti.style.width = `${Math.random() * 8 + 5}px`;
         confetti.style.height = `${Math.random() * 8 + 5}px`;
         confetti.style.setProperty('--color', confettiColors[i % confettiColors.length]);
@@ -48,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         backgroundElements.appendChild(confetti);
     }
 
-    // Crear estrellas para la escena final
+    // Crear estrellas
     for (let i = 0; i < NUM_STARS; i++) {
         const star = document.createElement('div');
         star.className = 'star';
@@ -77,50 +86,36 @@ document.addEventListener('DOMContentLoaded', () => {
             particle.className = 'firework-particle';
             particle.style.setProperty('--particle-color', color);
             
-            const angle = Math.random() * Math.PI * 2; // Ángulo aleatorio
-            const speed = Math.random() * 80 + 30; // Velocidad de la partícula
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 80 + 30;
             
             particle.style.setProperty('--dx', `${Math.cos(angle) * speed}px`);
-            particle.style.setProperty('--dy', `${Math.sin(angle) * speed + 50}px`); // +50 para efecto de caída
+            particle.style.setProperty('--dy', `${Math.sin(angle) * speed + 50}px`);
             
-            particle.style.animationDelay = `${Math.random() * 0.5}s`; // Pequeño delay
+            particle.style.animationDelay = `${Math.random() * 0.5}s`;
             fireworkDiv.appendChild(particle);
         }
 
-        // Eliminar el firework después de su animación
-        fireworkDiv.addEventListener('animationend', () => {
-            fireworkDiv.remove();
-        });
+        fireworkDiv.addEventListener('animationend', () => fireworkDiv.remove());
     }
 
     function launchFireworks() {
         for (let i = 0; i < NUM_FIREWORKS; i++) {
             setTimeout(() => {
                 const x = Math.random() * window.innerWidth;
-                const y = Math.random() * window.innerHeight * 0.6; // Solo en la parte superior
+                const y = Math.random() * window.innerHeight * 0.6;
                 createFirework(x, y);
-            }, i * 800); // Lanzar cada firework con un pequeño retraso
+            }, i * 800);
         }
     }
 
-    // Lanzar fuegos artificiales al cargar la página
     launchFireworks();
-    // Repetir fuegos artificiales cada cierto tiempo
-    setInterval(launchFireworks, NUM_FIREWORKS * 800 + 5000); // Ajusta el tiempo entre ráfagas
+    setInterval(launchFireworks, NUM_FIREWORKS * 800 + 5000);
 
 
     // --- EVENTO DE CLIC EN LA TORTA ---
     cakeContainer.addEventListener('click', () => {
-        // 1. Apagar las velas
-        flames.forEach(flame => {
-            flame.classList.add('out');
-        });
-
-        // 2. Activar la transición a la escena final
+        flames.forEach(flame => flame.classList.add('out'));
         card.classList.add('zoomed');
-
-        // Opcional: Sonido de soplido de velas
-        // const blowSound = new Audio('ruta/a/tu/sonido.mp3');
-        // blowSound.play();
     });
 });
