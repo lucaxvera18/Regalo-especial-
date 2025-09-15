@@ -1,10 +1,11 @@
 :root {
     --bg-color: #0d1b2a;
     --star-color: #e0e1dd;
-    --cake-bottom: #f4a261;
-    --cake-middle: #e76f51;
-    --cake-top: #d4e17d;
-    --icing: #ffffff;
+    --plate-color: #f2f2f2;
+    --cake-base-color: #ffc8dd; /* Rosa pastel */
+    --cake-top-color: #a2d2ff;  /* Azul pastel */
+    --icing-color: #ffffff;
+    --drip-color: var(--icing-color);
     --flame-color: #f9c74f;
 }
 
@@ -34,10 +35,13 @@ body {
 }
 
 /* --- ESCENA INICIAL --- */
-
 .initial-scene {
     opacity: 1;
     transition: opacity 0.5s ease-out;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 100%;
 }
 
 .birthday-card.zoomed .initial-scene {
@@ -84,95 +88,121 @@ body {
     animation: fall 8s linear infinite;
 }
 
-.text-container {
-    position: absolute;
-    top: 15%;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    z-index: 10;
-    font-size: clamp(1rem, 4vw, 1.5rem);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
 
-/* --- TORTA Y VELAS --- */
-
+/* --- TORTA REDISEÑADA --- */
 .cake-container {
-    position: absolute;
-    bottom: 10%;
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative;
     z-index: 20;
     text-align: center;
     cursor: pointer;
+    margin-bottom: 12vh; /* Ajusta la posición vertical de la torta */
 }
 
 .tap-message {
-    margin-top: 20px;
+    margin-top: 25px;
     font-size: clamp(0.75rem, 2.5vw, 1rem);
     opacity: 0.8;
     animation: pulse 2s infinite;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
 .cake {
     position: relative;
-    width: 250px;
-    height: 150px;
+    width: 280px;
+    height: 220px;
 }
 
-.layer {
-    position: absolute;
+.plate {
     width: 100%;
+    height: 20px;
+    background: var(--plate-color);
+    position: absolute;
+    bottom: 0;
     left: 0;
-    border: 2px solid #49270e;
+    border-radius: 50%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-.layer-top {
-    height: 40px;
-    background: var(--cake-top);
-    top: 40px;
+.tier {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0);
+    background-size: 15px 15px; /* Simula sprinkles/confeti en la torta */
+    box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1);
 }
 
-.layer-middle {
-    height: 50px;
-    background: var(--cake-middle);
-    top: 80px;
+.tier-bottom {
+    bottom: 10px;
+    height: 120px;
+    width: 250px;
+    background-color: var(--cake-base-color);
+    border-radius: 10px;
 }
 
-.layer-bottom {
-    height: 60px;
-    background: var(--cake-bottom);
-    top: 130px;
+.tier-top {
+    bottom: 130px;
+    height: 80px;
+    width: 200px;
+    background-color: var(--cake-top-color);
+    border-radius: 10px;
 }
 
 .icing {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 40px;
-    background: var(--icing);
-    border-radius: 50% 50% 0 0 / 20px 20px 0 0;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 210px;
+    width: 200px;
+    height: 25px;
+    background: var(--icing-color);
+    border-radius: 50%;
 }
+
+.drips {
+    position: absolute;
+    width: 200px;
+    height: 30px;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.drip {
+    position: absolute;
+    bottom: 0;
+    width: 20px;
+    height: 35px;
+    background: var(--drip-color);
+    border-radius: 0 0 10px 10px;
+}
+
+.drip1 { left: 15px; height: 30px; }
+.drip2 { left: 50px; height: 40px; }
+.drip3 { left: 90px; height: 25px; }
+.drip4 { left: 130px; height: 45px; }
+.drip5 { left: 165px; height: 30px; }
 
 .candles {
     position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
+    width: 180px;
     height: 50px;
+    left: 50%;
+    bottom: 225px;
+    transform: translateX(-50%);
     display: flex;
     justify-content: space-around;
+    align-items: flex-end;
 }
 
 .candle {
-    width: 6px;
+    width: 8px;
     height: 50px;
     background: var(--candle-color);
     border: 1px solid #fff;
-    border-radius: 3px;
+    border-radius: 4px;
     position: relative;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
 }
 
 .flame {
@@ -195,7 +225,6 @@ body {
 }
 
 /* --- ESCENA FINAL --- */
-
 .final-scene {
     position: absolute;
     top: 0;
@@ -205,7 +234,7 @@ body {
     background: var(--bg-color);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 1s 0.5s ease-in; /* Delay to match zoom */
+    transition: opacity 1s 0.5s ease-in;
 }
 
 .birthday-card.zoomed .final-scene {
@@ -249,12 +278,10 @@ body {
     text-shadow: 0 0 10px #fff, 0 0 20px #fff;
     opacity: 0;
     transform: translateY(20px);
-    animation: fadeInText 2s 1s forwards; /* Delay after scene transition */
+    animation: fadeInText 2s 1s forwards;
 }
 
-
 /* --- ANIMACIONES --- */
-
 @keyframes float {
     0%, 100% { transform: translateY(0) rotate(0); }
     50% { transform: translateY(-30px) rotate(5deg); }
@@ -292,18 +319,20 @@ body {
     50% { opacity: 1; transform: scale(1.05); }
 }
 
-
 /* --- RESPONSIVE DESIGN --- */
-
-/* Celulares en horizontal */
+@media (max-width: 600px) {
+    .cake {
+        transform: scale(0.8);
+    }
+}
 @media (max-height: 500px) and (orientation: landscape) {
     .cake {
-        transform: scale(0.7);
+        transform: scale(0.6);
     }
-    .text-container {
-        top: 5%;
+    .cake-container {
+        margin-bottom: 5vh;
     }
     .tap-message {
-        display: none; /* Oculta el mensaje para no saturar */
+        display: none;
     }
 }
