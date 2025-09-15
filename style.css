@@ -30,8 +30,7 @@ body {
 .initial-scene {
     opacity: 1;
     transition: opacity 0.5s ease-out;
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -51,13 +50,12 @@ body {
 }
 .fireworks-container { z-index: 5; }
 
-/* --- GLOBOS CON ANIMACIÓN CORREGIDA --- */
+/* --- GLOBOS FIJOS Y REBOTANTES --- */
 .balloon {
     position: absolute;
     width: 60px; height: 75px;
     border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
     background-color: var(--color);
-    animation: float-down 15s linear infinite;
     opacity: 0.9;
     box-shadow: inset -8px -8px 15px rgba(0,0,0,0.25);
     z-index: 2;
@@ -88,6 +86,12 @@ body {
     transform: translateX(-50%);
     width: 1px; height: 70px;
     background-color: rgba(255, 255, 255, 0.4);
+}
+
+.fixed-balloon {
+    top: var(--initial-y);
+    left: var(--initial-x);
+    animation: bounce 15s infinite ease-in-out var(--delay);
 }
 
 /* --- CONFETI --- */
@@ -137,12 +141,12 @@ body {
     transition: all 0.4s ease;
 }
 
-/* === POSICIONES RE-AJUSTADAS DE LAS LLAMAS === */
-.flame1 { top: 21%; left: 28%; }
-.flame2 { top: 18.5%; left: 38.5%; }
-.flame3 { top: 16.5%; left: 49%; }
-.flame4 { top: 18.5%; left: 59.5%; }
-.flame5 { top: 21%; left: 69%; }
+/* === POSICIONES RE-RE-AJUSTADAS DE LAS LLAMAS === */
+.flame1 { top: 20%; left: 29.5%; }
+.flame2 { top: 17.5%; left: 40.5%; }
+.flame3 { top: 15.5%; left: 50.5%; }
+.flame4 { top: 17.5%; left: 60.5%; }
+.flame5 { top: 20%; left: 70.5%; }
 
 .candle-flame.out {
     transform: scale(0) translateY(5px);
@@ -220,10 +224,6 @@ body {
 
 
 /* --- ANIMACIONES --- */
-@keyframes float-down {
-    from { transform: translateY(-100vh) translateX(var(--x-offset, 0px)) rotate(var(--rotation, 0deg)); opacity: 1; }
-    to   { transform: translateY(100vh) translateX(var(--x-offset, 0px)) rotate(var(--rotation, 0deg)); opacity: 1; }
-}
 @keyframes fall {
     from { top: -20px; transform: rotate(0deg) scale(1); opacity: 1;}
     to   { top: 100vh; transform: rotate(720deg) scale(0.5); opacity: 0;}
@@ -255,15 +255,23 @@ body {
     100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.5); }
 }
 
+@keyframes bounce {
+    0%, 100% { transform: translate(0, 0); }
+    25% { transform: translate(var(--bounce-x, 10px), var(--bounce-y, 20px)); }
+    50% { transform: translate(0, var(--bounce-y-alt, -10px)); }
+    75% { transform: translate(var(--bounce-x-alt, -5px), var(--bounce-y-alt, 10px)); }
+}
+
+
 /* --- RESPONSIVE DESIGN --- */
 @media (max-width: 600px) {
     .cake-container { margin-bottom: 3vh; }
     /* Ajuste final de llamas para móviles */
-    .flame1 { top: 21.5%; left: 27%; }
-    .flame2 { top: 19%; left: 38%; }
-    .flame3 { top: 17%; left: 49%; }
-    .flame4 { top: 19%; left: 60%; }
-    .flame5 { top: 21.5%; left: 70%; }
+    .flame1 { top: 20.5%; left: 28%; }
+    .flame2 { top: 18%; left: 39%; }
+    .flame3 { top: 16%; left: 50%; }
+    .flame4 { top: 18%; left: 61%; }
+    .flame5 { top: 20.5%; left: 72%; }
 
     .tap-message { font-size: clamp(0.6rem, 3vw, 0.9rem); margin-top: 15px; }
     .final-text { font-size: clamp(0.9rem, 5vw, 1.5rem); }
