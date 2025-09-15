@@ -2,10 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const card = document.querySelector('.birthday-card');
     const cakeContainer = document.querySelector('.cake-container');
     const flames = document.querySelectorAll('.candle-flame');
+    const music = document.getElementById('birthday-music');
     
     const backgroundElements = document.querySelector('.background-elements');
     const fireworksContainer = document.querySelector('.fireworks-container');
     const starsContainer = document.querySelector('.stars');
+
+    let musicPlayed = false;
 
     const balloonColors = ['#ffadad', '#ffd6a5', '#fdffb6', '#caffbf', '#9bf6ff', '#a0c4ff', '#bdb2ff', '#ffc6ff', '#f72585', '#7209b7', '#e63946'];
     const confettiColors = ['#f25478', '#f8a84c', '#fce254', '#84d47c', '#54b4cc', '#6c6ce8', '#a864d4', '#e63946', '#f4a261', '#2a9d8f'];
@@ -17,32 +20,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const NUM_FIREWORKS = 5;
     const FIREWORK_PARTICLES = 30;
 
-
     // --- GENERACIÓN DE ELEMENTOS ---
-
-    // Crear globos (con la corrección para que caigan)
+    // (Esta parte no cambia, puedes mantener la que ya tenías o copiar esta)
     for (let i = 0; i < NUM_BALLOONS; i++) {
         const balloon = document.createElement('div');
         const string = document.createElement('span');
-        
         balloon.className = 'balloon';
         string.className = 'balloon-string';
-        
-        balloon.appendChild(string); // Añadir el hilo dentro del globo
-        
+        balloon.appendChild(string);
         balloon.style.left = `${Math.random() * 95}vw`;
-        balloon.style.top = `${Math.random() * -100}vh`; // <-- CORRECCIÓN: Empezar arriba
-        
+        balloon.style.top = `${Math.random() * -100 - 100}vh`; // Empezar más arriba para una transición suave
         balloon.style.setProperty('--x-offset', `${(Math.random() - 0.5) * 50}px`);
         balloon.style.setProperty('--rotation', `${(Math.random() - 0.5) * 30}deg`);
         balloon.style.animationDelay = `${Math.random() * 10}s`;
         balloon.style.animationDuration = `${Math.random() * 10 + 15}s`;
         balloon.style.setProperty('--color', balloonColors[i % balloonColors.length]);
-        
         backgroundElements.appendChild(balloon);
     }
-
-    // Crear confeti
     for (let i = 0; i < NUM_CONFETTI; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
@@ -56,8 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
         confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
         backgroundElements.appendChild(confetti);
     }
-
-    // Crear estrellas
     for (let i = 0; i < NUM_STARS; i++) {
         const star = document.createElement('div');
         star.className = 'star';
@@ -66,39 +58,31 @@ document.addEventListener('DOMContentLoaded', () => {
         star.style.animationDelay = `${Math.random() * 5}s`;
         star.style.animationDuration = `${Math.random() * 3 + 2}s`;
         const size = `${Math.random() * 2 + 1}px`;
-        star.style.width = size;
-        star.style.height = size;
+        star.style.width = size; star.style.height = size;
         starsContainer.appendChild(star);
     }
 
-    // --- FUNCIONES DE FUEGOS ARTIFICIALES ---
+    // --- FUEGOS ARTIFICIALES ---
     function createFirework(x, y) {
         const fireworkDiv = document.createElement('div');
         fireworkDiv.className = 'firework';
         fireworkDiv.style.left = `${x}px`;
         fireworkDiv.style.top = `${y}px`;
         fireworksContainer.appendChild(fireworkDiv);
-
         const color = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
-
         for (let i = 0; i < FIREWORK_PARTICLES; i++) {
             const particle = document.createElement('div');
             particle.className = 'firework-particle';
             particle.style.setProperty('--particle-color', color);
-            
             const angle = Math.random() * Math.PI * 2;
             const speed = Math.random() * 80 + 30;
-            
             particle.style.setProperty('--dx', `${Math.cos(angle) * speed}px`);
             particle.style.setProperty('--dy', `${Math.sin(angle) * speed + 50}px`);
-            
             particle.style.animationDelay = `${Math.random() * 0.5}s`;
             fireworkDiv.appendChild(particle);
         }
-
         fireworkDiv.addEventListener('animationend', () => fireworkDiv.remove());
     }
-
     function launchFireworks() {
         for (let i = 0; i < NUM_FIREWORKS; i++) {
             setTimeout(() => {
@@ -108,13 +92,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }, i * 800);
         }
     }
-
     launchFireworks();
     setInterval(launchFireworks, NUM_FIREWORKS * 800 + 5000);
 
 
     // --- EVENTO DE CLIC EN LA TORTA ---
     cakeContainer.addEventListener('click', () => {
+        // Reproducir música en el primer clic
+        if (!musicPlayed) {
+            music.play().catch(error => {
+                console.log("La reproducción automática fue bloqueada por el navegador. El usuario debe interactuar primero.");
+            });
+            musicPlayed = true;
+        }
+
         flames.forEach(flame => flame.classList.add('out'));
         card.classList.add('zoomed');
     });
