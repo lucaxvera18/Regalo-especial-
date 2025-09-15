@@ -7,8 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const backgroundElements = document.querySelector('.background-elements');
     const fireworksContainer = document.querySelector('.fireworks-container');
     const starsContainer = document.querySelector('.stars');
+    const sparkleContainer = document.querySelector('.sparkle-container');
 
     let musicPlayed = false;
+    let canCreateSparkle = true;
 
     const confettiColors = ['#f25478', '#f8a84c', '#fce254', '#84d47c', '#54b4cc', '#6c6ce8', '#a864d4', '#e63946', '#f4a261', '#2a9d8f'];
     const fireworkColors = ['#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845', '#DAF7A6', '#FFC0CB', '#ADD8E6'];
@@ -19,8 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const FIREWORK_PARTICLES = 30;
 
     // --- GENERACIÓN DE ELEMENTOS ---
-    // (Globos ahora se definen en HTML)
-
+    for (let i = 0; i < NUM_CONFETTI; i++) { /* ... (código de confeti sin cambios) ... */ }
+    for (let i = 0; i < NUM_STARS; i++) { /* ... (código de estrellas sin cambios) ... */ }
+    
+    // (El código de confeti y estrellas es largo, si quieres lo pongo completo, pero no ha cambiado)
     // Crear confeti
     for (let i = 0; i < NUM_CONFETTI; i++) {
         const confetti = document.createElement('div');
@@ -49,7 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
         starsContainer.appendChild(star);
     }
 
+
     // --- FUEGOS ARTIFICIALES ---
+    function createFirework(x, y) { /* ... (código de fuegos artificiales sin cambios) ... */ }
+    function launchFireworks() { /* ... (código de fuegos artificiales sin cambios) ... */ }
+    
+    // (Pongo el código de fuegos artificiales por si acaso)
     function createFirework(x, y) {
         const fireworkDiv = document.createElement('div');
         fireworkDiv.className = 'firework';
@@ -83,16 +92,54 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(launchFireworks, NUM_FIREWORKS * 800 + 5000);
 
 
-    // --- EVENTO DE CLIC EN LA TORTA ---
+    // --- NUEVA FUNCIÓN DE PARTÍCULAS BRILLANTES ---
+    function createSparkle(x, y) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        // Añadir un pequeño offset aleatorio para que no sea una línea perfecta
+        sparkle.style.left = `${x + (Math.random() - 0.5) * 20}px`;
+        sparkle.style.top = `${y + (Math.random() - 0.5) * 20}px`;
+        sparkleContainer.appendChild(sparkle);
+        // Eliminar la partícula del DOM después de la animación para no sobrecargar la página
+        setTimeout(() => {
+            sparkle.remove();
+        }, 1000);
+    }
+
+    // --- EVENT LISTENERS ---
+    
+    // Para mouse (PC)
+    document.addEventListener('mousemove', (e) => {
+        if (canCreateSparkle) {
+            createSparkle(e.clientX, e.clientY);
+            canCreateSparkle = false;
+            setTimeout(() => {
+                canCreateSparkle = true;
+            }, 50); // Limita la creación de partículas para un buen rendimiento
+        }
+    });
+
+    // Para touch (móviles)
+    document.addEventListener('touchmove', (e) => {
+        if (canCreateSparkle) {
+            // Usar el primer punto de contacto
+            const touch = e.touches[0];
+            createSparkle(touch.clientX, touch.clientY);
+            canCreateSparkle = false;
+            setTimeout(() => {
+                canCreateSparkle = true;
+            }, 50);
+        }
+    });
+
+    // Evento de clic en la torta
     cakeContainer.addEventListener('click', () => {
-        // Reproducir música en el primer clic
         if (!musicPlayed) {
             music.play().catch(error => {
-                console.log("La reproducción automática fue bloqueada por el navegador. El usuario debe interactuar primero.");
+                console.log("La reproducción fue bloqueada por el navegador.");
             });
             musicPlayed = true;
         }
-
         flames.forEach(flame => flame.classList.add('out'));
         card.classList.add('zoomed');
     });
