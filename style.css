@@ -31,14 +31,14 @@ body {
 .fireworks-container, .background-elements { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden; pointer-events: none; }
 .fireworks-container { z-index: 5; }
 
-/* --- GLOBOS --- */
+/* --- GLOBOS CON ANIMACIÓN LIBRE --- */
 .balloon { position: absolute; width: 60px; height: 75px; border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%; background-color: var(--color); opacity: 0.9; box-shadow: inset -8px -8px 15px rgba(0,0,0,0.25); z-index: 2; }
 .balloon::before { content: ''; position: absolute; top: 10%; left: 10%; width: 40%; height: 40%; background: radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; transform: rotate(-30deg); }
 .balloon::after { content: ''; position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 8px solid var(--color); filter: brightness(0.8); }
 .balloon-string { position: absolute; bottom: -70px; left: 50%; transform: translateX(-50%); width: 1px; height: 70px; background-color: rgba(255, 255, 255, 0.4); }
 
 .fixed-balloon {
-    animation: bounce 20s infinite ease-in-out var(--delay);
+    animation: free-float 25s infinite ease-in-out var(--delay);
 }
 
 /* --- CONFETI --- */
@@ -47,30 +47,11 @@ body {
 /* --- TORTA Y BOTÓN --- */
 .cake-container { position: relative; z-index: 10; text-align: center; margin-bottom: 5vh; width: clamp(280px, 70vw, 400px); display: flex; flex-direction: column; align-items: center; }
 .cake-image { width: 100%; object-fit: contain; display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
-
-.message-button {
-    padding: 12px 25px;
-    margin-bottom: 20px; /* Espacio entre el botón y la torta */
-    font-family: "Playwrite CO", cursive;
-    font-size: 1rem;
-    font-weight: bold;
-    color: white;
-    background: linear-gradient(45deg, #f72585, #b5179e);
-    border: 2px solid white;
-    border-radius: 50px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-    transition: transform 0.2s ease-out;
-    animation: pulse 2s infinite;
-    z-index: 11;
-}
-.message-button:hover, .message-button:active {
-    transform: scale(1.05);
-    animation: none; /* Detener el pulso al interactuar */
-}
+.message-button { padding: 12px 25px; margin-bottom: 20px; font-family: "Playwrite CO", cursive; font-size: 1rem; font-weight: bold; color: white; background: linear-gradient(45deg, #f72585, #b5179e); border: 2px solid white; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); transition: transform 0.2s ease-out; animation: pulse 2s infinite; z-index: 11; }
+.message-button:hover, .message-button:active { transform: scale(1.05); animation: none; }
 
 /* --- EFECTOS DE FUEGOS ARTIFICIALES Y PARTÍCULAS --- */
-.firework-launcher { position: absolute; width: 6px; height: 6px; background-color: #fff; border-radius: 50%; opacity: 0; transform: translateY(0); animation: firework-launch 1s forwards ease-out; z-index: 4; box-shadow: 0 0 5px #fff, 0 0 10px #ffc107; }
+.firework-launcher { position: absolute; width: 6px; height: 6px; background-color: #fff; border-radius: 50%; opacity: 0; transform: translateY(0); animation: firework-launch 1.5s forwards ease-out; z-index: 4; box-shadow: 0 0 5px #fff, 0 0 10px #ffc107; }
 .firework { position: absolute; opacity: 0; animation: firework-burst 2s forwards ease-out; }
 .firework-particle { position: absolute; width: 6px; height: 6px; background-color: var(--particle-color); border-radius: 50%; opacity: 0; animation: particle-fall 1.5s forwards ease-out; }
 .sparkle { position: absolute; width: 8px; height: 8px; background-color: #ffd700; border-radius: 50%; box-shadow: 0 0 10px #ffd700, 0 0 15px #fff; opacity: 1; animation: fade-out 1s forwards; }
@@ -89,11 +70,19 @@ body {
 @keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 @keyframes fadeInText { to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-@keyframes firework-launch { 0% { opacity: 0; transform: translateY(0) scale(0.1); } 10% { opacity: 1; transform: translateY(-50px) scale(0.8); } 80% { opacity: 1; transform: translateY(var(--target-y)) scale(1); } 100% { opacity: 0; transform: translateY(var(--target-y)) scale(0); } }
+@keyframes firework-launch { 0% { opacity: 1; transform: translateY(0) scale(0.5); } 100% { opacity: 0; transform: translateY(-100vh) scale(1); } }
 @keyframes firework-burst { 0% { opacity: 0; transform: scale(0.1); } 50% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.2); } }
 @keyframes particle-fall { 0% { opacity: 1; transform: translate(0, 0); } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)); } }
 @keyframes fade-out { to { transform: scale(0); opacity: 0; } }
-@keyframes bounce { 0%, 100% { transform: translate(0, 0) rotate(5deg); } 25% { transform: translate(calc(var(--rand-x-1) * 1vw), calc(var(--rand-y-1) * 1vh)) rotate(var(--rand-deg-1)); } 50% { transform: translate(calc(var(--rand-x-2) * 1vw), calc(var(--rand-y-2) * 1vh)) rotate(var(--rand-deg-2)); } 75% { transform: translate(calc(var(--rand-x-3) * 1vw), calc(var(--rand-y-3) * 1vh)) rotate(var(--rand-deg-3)); } }
+
+/* NUEVA Y MEJORADA ANIMACIÓN DE GLOBOS */
+@keyframes free-float {
+  0% { transform: translate(0, 0) rotate(5deg); }
+  25% { transform: translate(20vw, -30vh) rotate(-5deg); }
+  50% { transform: translate(-15vw, 0) rotate(5deg); }
+  75% { transform: translate(10vw, 30vh) rotate(-5deg); }
+  100% { transform: translate(0, 0) rotate(5deg); }
+}
 
 /* --- RESPONSIVE DESIGN --- */
 @media (max-width: 600px) {
