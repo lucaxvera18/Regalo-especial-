@@ -1,119 +1,159 @@
-:root {
-    --bg-color: #0d1b2a;
-    --star-color: #e0e1dd;
-    --flame-color: #ffcc00;
-}
+document.addEventListener('DOMContentLoaded', () => {
+    // --- ELEMENTOS DEL DOM ---
+    const card = document.querySelector('.birthday-card');
+    const cakeContainer = document.querySelector('.cake-container');
+    const music = document.getElementById('birthday-music');
+    const sparkleContainer = document.querySelector('.sparkle-container');
+    const backgroundElements = document.querySelector('.background-elements');
+    const fireworksContainer = document.querySelector('.fireworks-container');
+    const starsContainer = document.querySelector('.stars');
+    const fixedBalloons = document.querySelectorAll('.fixed-balloon'); // Para los nuevos globos
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+    // --- VARIABLES DE ESTADO ---
+    let musicPlayed = false;
+    let sparkleInterval;
 
-body {
-    font-family: "Playwrite CO", cursive;
-    height: 100vh;
-    overflow: hidden;
-    background: linear-gradient(180deg, #3a0ca3, #7209b7);
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    color: white;
-    position: relative;
-}
+    // --- CONFIGURACIÓN ---
+    const confettiColors = ['#f25478', '#f8a84c', '#fce254', '#84d47c', '#54b4cc', '#6c6ce8', '#a864d4'];
+    const fireworkColors = ['#FFC300', '#FF5733', '#C70039', '#900C3F', '#581845'];
+    const NUM_CONFETTI = 100;
+    const NUM_STARS = 180;
+    const NUM_FIREWORKS = 5;
+    const FIREWORK_PARTICLES = 30;
 
-.birthday-card {
-    position: relative;
-    width: 100%; height: 100%;
-    overflow: hidden;
-}
+    // --- FUNCIONES DE CREACIÓN ---
+    
+    // Crear confeti
+    for (let i = 0; i < NUM_CONFETTI; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = `${Math.random() * 100}vw`;
+        confetti.style.animationDelay = `${Math.random() * 10}s`;
+        confetti.style.animationDuration = `${Math.random() * 8 + 7}s`;
+        confetti.style.setProperty('--color', confettiColors[i % confettiColors.length]);
+        backgroundElements.appendChild(confetti);
+    }
 
-/* --- ESCENA INICIAL --- */
-.initial-scene { opacity: 1; transition: opacity 0.5s ease-out; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; position: absolute; top: 0; left: 0; }
-.birthday-card.zoomed .initial-scene { opacity: 0; pointer-events: none; }
+    // Crear estrellas
+    for (let i = 0; i < NUM_STARS; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+        const size = `${Math.random() * 2 + 1}px`;
+        star.style.width = size;
+        star.style.height = size;
+        starsContainer.appendChild(star);
+    }
 
-.sparkle-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; pointer-events: none; }
-.fireworks-container, .background-elements { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; overflow: hidden; pointer-events: none; }
-.fireworks-container { z-index: 5; }
+    // --- NUEVA LÓGICA DE GLOBOS ---
+    fixedBalloons.forEach(balloon => {
+        // Generar valores aleatorios para la animación de rebote
+        balloon.style.setProperty('--rand-x-1', Math.random() * 30 - 15); // -15 a 15 vw
+        balloon.style.setProperty('--rand-y-1', Math.random() * 40 - 20); // -20 a 20 vh
+        balloon.style.setProperty('--rand-deg-1', Math.random() * 20 - 10); // -10 a 10 deg
 
-/* --- GLOBOS CON NUEVA ANIMACIÓN REBOTANTE --- */
-.balloon { position: absolute; width: 60px; height: 75px; border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%; background-color: var(--color); opacity: 0.9; box-shadow: inset -8px -8px 15px rgba(0,0,0,0.25); z-index: 2; }
-.balloon::before { content: ''; position: absolute; top: 10%; left: 10%; width: 40%; height: 40%; background: radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; transform: rotate(-30deg); }
-.balloon::after { content: ''; position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 8px solid var(--color); filter: brightness(0.8); }
-.balloon-string { position: absolute; bottom: -70px; left: 50%; transform: translateX(-50%); width: 1px; height: 70px; background-color: rgba(255, 255, 255, 0.4); }
+        balloon.style.setProperty('--rand-x-2', Math.random() * 30 - 15);
+        balloon.style.setProperty('--rand-y-2', Math.random() * 40 - 20);
+        balloon.style.setProperty('--rand-deg-2', Math.random() * 20 - 10);
 
-.fixed-balloon {
-    /* La posición inicial se define en HTML */
-    animation: bounce 20s infinite ease-in-out var(--delay);
-}
+        balloon.style.setProperty('--rand-x-3', Math.random() * 30 - 15);
+        balloon.style.setProperty('--rand-y-3', Math.random() * 40 - 20);
+        balloon.style.setProperty('--rand-deg-3', Math.random() * 20 - 10);
+    });
 
-/* --- CONFETI --- */
-.confetti { position: absolute; width: 10px; height: 10px; background-color: var(--color); opacity: 0.7; border-radius: 2px; animation: fall 10s linear infinite; z-index: 2; }
 
-/* --- TORTA --- */
-.cake-container { position: relative; z-index: 10; text-align: center; cursor: pointer; margin-bottom: 5vh; width: clamp(280px, 70vw, 400px); height: clamp(300px, 80vw, 500px); transition: transform 0.3s ease-out; }
-.cake-image { width: 100%; height: 100%; object-fit: contain; display: block; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
-.cake-container:active { transform: translateY(5px); }
+    // Crear fuegos artificiales (con lanzador ascendente)
+    function createFirework(x, y) {
+        const launcher = document.createElement('div');
+        launcher.className = 'firework-launcher';
+        launcher.style.left = `${x}px`;
+        launcher.style.top = `${window.innerHeight}px`; // Empieza desde abajo
+        launcher.style.setProperty('--target-y', `${y}px`); // La altura a la que va
+        fireworksContainer.appendChild(launcher);
 
-.tap-message { margin-top: 25px; font-size: clamp(0.75rem, 2.5vw, 1rem); opacity: 0.9; animation: pulse 2s infinite; text-shadow: 1px 1px 5px rgba(0,0,0,0.7); color: #fff; font-weight: bold; }
+        launcher.addEventListener('animationend', () => {
+            launcher.remove(); // Elimina el lanzador después de que sube
 
-/* --- EFECTOS DE FUEGOS ARTIFICIALES Y PARTÍCULAS --- */
-.firework-launcher {
-    position: absolute;
-    width: 6px; height: 6px;
-    background-color: #fff;
-    border-radius: 50%;
-    opacity: 0;
-    transform: translateY(0);
-    animation: firework-launch 1s forwards ease-out;
-    z-index: 4;
-    box-shadow: 0 0 5px #fff, 0 0 10px #ffc107;
-}
+            const fireworkDiv = document.createElement('div');
+            fireworkDiv.className = 'firework';
+            fireworkDiv.style.left = `${x}px`;
+            fireworkDiv.style.top = `${y}px`;
+            fireworksContainer.appendChild(fireworkDiv);
+            const color = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
+            for (let i = 0; i < FIREWORK_PARTICLES; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework-particle';
+                particle.style.setProperty('--particle-color', color);
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 80 + 30;
+                particle.style.setProperty('--dx', `${Math.cos(angle) * speed}px`);
+                particle.style.setProperty('--dy', `${Math.sin(angle) * speed + 50}px`);
+                fireworkDiv.appendChild(particle);
+            }
+            setTimeout(() => fireworkDiv.remove(), 2000); // Elimina la explosión después de 2s
+        }, { once: true });
+    }
 
-.firework { position: absolute; opacity: 0; animation: firework-burst 2s forwards ease-out; }
-.firework-particle { position: absolute; width: 6px; height: 6px; background-color: var(--particle-color); border-radius: 50%; opacity: 0; animation: particle-fall 1.5s forwards ease-out; }
-.sparkle { position: absolute; width: 8px; height: 8px; background-color: #ffd700; border-radius: 50%; box-shadow: 0 0 10px #ffd700, 0 0 15px #fff; opacity: 1; animation: fade-out 1s forwards; }
 
-/* --- ESCENA FINAL --- */
-.final-scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); opacity: 0; pointer-events: none; transition: opacity 1s 0.5s ease-in; display: flex; justify-content: center; align-items: center; }
-.birthday-card.zoomed .final-scene { opacity: 1; pointer-events: all; }
-.birthday-card.zoomed { transform: scale(1); }
-.stars { width: 100%; height: 100%; position: absolute; }
-.star { position: absolute; width: 2px; height: 2px; background-color: var(--star-color); border-radius: 50%; animation: twinkle 5s infinite; }
-.final-text-container { height: 100%; display: flex; justify-content: center; align-items: center; padding: 20px; max-width: 800px; margin: auto; }
-.final-text { font-family: "Playwrite AR", cursive; text-align: center; font-size: clamp(1rem, 4.5vw, 1.8rem); line-height: 1.6; color: var(--star-color); text-shadow: 0 0 10px #fff, 0 0 20px #fff; opacity: 0; transform: translateY(20px); animation: fadeInText 2s 1.5s forwards; }
+    function launchFireworks() {
+        for (let i = 0; i < NUM_FIREWORKS; i++) {
+            setTimeout(() => {
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight * 0.5; // Explota en la mitad superior
+                createFirework(x, y);
+            }, i * 1500);
+        }
+    }
+    
+    // Crear partículas brillantes interactivas
+    function createSparkle(x, y) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = `${x}px`;
+        sparkle.style.top = `${y}px`;
+        sparkleContainer.appendChild(sparkle);
+        setTimeout(() => sparkle.remove(), 1000);
+    }
 
-/* --- ANIMACIONES --- */
-@keyframes fall { from { top: -20px; } to { top: 100vh; } }
-@keyframes flicker { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.95); } }
-@keyframes sparks { 0%, 100% { box-shadow: 0 0 5px rgba(255,238,0,0.2); } 50% { box-shadow: 0 -5px 10px #ffc300, 0 0 15px #fefae0; } }
-@keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
-@keyframes fadeInText { to { opacity: 1; transform: translateY(0); } }
-@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    // --- MANEJADORES DE EVENTOS ---
+    
+    // Evento de clic en la torta
+    cakeContainer.addEventListener('click', () => {
+        if (!musicPlayed) {
+            music.play().catch(e => console.error("Error al reproducir música:", e));
+            musicPlayed = true;
+        }
+        card.classList.add('zoomed');
+    });
+    
+    // Eventos para partículas interactivas (Mouse y Touch)
+    function handlePointerMove(x, y) {
+        if (!sparkleInterval) {
+            sparkleInterval = setInterval(() => {
+                createSparkle(x, y);
+            }, 100);
+        }
+        createSparkle(x, y);
+    }
 
-/* Animación de lanzamiento de fuegos artificiales más pronunciada */
-@keyframes firework-launch {
-    0%   { opacity: 0; transform: translateY(0) scale(0.1); }
-    10%  { opacity: 1; transform: translateY(-50px) scale(0.8); } /* Sale más rápido */
-    80%  { opacity: 1; transform: translateY(var(--target-y)) scale(1); } /* Llega a la altura deseada */
-    100% { opacity: 0; transform: translateY(var(--target-y)) scale(0); } /* Desaparece en el punto de explosión */
-}
-@keyframes firework-burst {
-    0%   { opacity: 0; transform: scale(0.1); }
-    50%  { opacity: 1; transform: scale(1); }
-    100% { opacity: 0; transform: scale(1.2); }
-}
-@keyframes particle-fall { 0% { opacity: 1; transform: translate(0, 0); } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)); } }
-@keyframes fade-out { to { transform: scale(0); opacity: 0; } }
+    function handlePointerStop() {
+        clearInterval(sparkleInterval);
+        sparkleInterval = null;
+    }
 
-/* Nueva animación de globos rebotando por todos lados */
-@keyframes bounce {
-    0%, 100% { transform: translate(0, 0) rotate(5deg); }
-    25%      { transform: translate(calc(var(--rand-x-1) * 1vw), calc(var(--rand-y-1) * 1vh)) rotate(var(--rand-deg-1)); }
-    50%      { transform: translate(calc(var(--rand-x-2) * 1vw), calc(var(--rand-y-2) * 1vh)) rotate(var(--rand-deg-2)); }
-    75%      { transform: translate(calc(var(--rand-x-3) * 1vw), calc(var(--rand-y-3) * 1vh)) rotate(var(--rand-deg-3)); }
-}
+    window.addEventListener('mousemove', e => handlePointerMove(e.clientX, e.clientY));
+    window.addEventListener('touchmove', e => {
+        e.preventDefault();
+        handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
+    });
+    
+    window.addEventListener('mouseup', handlePointerStop);
+    window.addEventListener('touchend', handlePointerStop);
 
-/* --- RESPONSIVE DESIGN --- */
-@media (max-width: 600px) {
-    .cake-container { margin-bottom: 3vh; }
-    .tap-message { font-size: clamp(0.6rem, 3vw, 0.9rem); margin-top: 15px; }
-    .final-text { font-size: clamp(0.9rem, 5vw, 1.5rem); }
-}
-@media (max-height: 500px) and (orientation: landscape) { .cake-container { margin-bottom: 2vh; } .tap-message { display: none; } .final-text { font-size: clamp(0.8rem, 4vw, 1.2rem); } }
+    // --- INICIO ---
+    launchFireworks();
+    setInterval(launchFireworks, NUM_FIREWORKS * 1500 + 5000);
+});
