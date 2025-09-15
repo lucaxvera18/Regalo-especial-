@@ -4,11 +4,7 @@
     --flame-color: #ffcc00;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     font-family: "Playwrite CO", cursive;
@@ -41,83 +37,63 @@ body {
     justify-content: flex-end;
     align-items: center;
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
 }
-
-.birthday-card.zoomed .initial-scene {
-    opacity: 0;
-    pointer-events: none;
-}
+.birthday-card.zoomed .initial-scene { opacity: 0; pointer-events: none; }
 
 .fireworks-container, .background-elements {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     z-index: 1;
     overflow: hidden;
     pointer-events: none;
 }
 .fireworks-container { z-index: 5; }
 
-/* --- GLOBOS REDISEÑADOS --- */
+/* --- GLOBOS CON ANIMACIÓN CORREGIDA --- */
 .balloon {
     position: absolute;
-    width: 60px;
-    height: 75px;
-    border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%; /* Forma de globo 🎈 */
+    width: 60px; height: 75px;
+    border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
     background-color: var(--color);
-    animation: float-down 15s linear infinite; /* Animación más suave */
+    animation: float-down 15s linear infinite;
     opacity: 0.9;
     box-shadow: inset -8px -8px 15px rgba(0,0,0,0.25);
     z-index: 2;
 }
-
-/* Brillo del globo */
 .balloon::before {
     content: '';
     position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 40%;
-    height: 40%;
+    top: 10%; left: 10%;
+    width: 40%; height: 40%;
     background: radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 70%);
     border-radius: 50%;
     transform: rotate(-30deg);
 }
-
-/* Nudo del globo */
 .balloon::after {
     content: '';
     position: absolute;
-    bottom: -3px;
-    left: 50%;
+    bottom: -3px; left: 50%;
     transform: translateX(-50%);
-    width: 0;
-    height: 0;
+    width: 0; height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 8px solid var(--color); /* Nudo del mismo color que el globo */
+    border-top: 8px solid var(--color);
     filter: brightness(0.8);
 }
-
 .balloon-string {
     position: absolute;
-    bottom: -70px; /* Longitud del hilo */
-    left: 50%;
+    bottom: -70px; left: 50%;
     transform: translateX(-50%);
-    width: 1px;
-    height: 70px;
+    width: 1px; height: 70px;
     background-color: rgba(255, 255, 255, 0.4);
 }
 
-/* --- CONFETI CAYENDO --- */
+/* --- CONFETI --- */
 .confetti {
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: 10px; height: 10px;
     background-color: var(--color);
     opacity: 0.7;
     border-radius: 2px;
@@ -126,7 +102,7 @@ body {
 }
 
 
-/* --- TORTA Y LLAMAS --- */
+/* --- TORTA Y LLAMAS AJUSTADAS --- */
 .cake-container {
     position: relative;
     z-index: 10;
@@ -137,30 +113,23 @@ body {
     height: clamp(300px, 80vw, 500px);
     transition: transform 0.3s ease-out;
 }
-
 .cake-image {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: contain;
     display: block;
     filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
 }
 .cake-container:active { transform: translateY(5px); }
 
-/* Contenedor para alinear las llamas con precisión */
 .candles-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     pointer-events: none;
 }
-
 .candle-flame {
     position: absolute;
-    width: 12px;
-    height: 18px;
+    width: 12px; height: 18px;
     background: radial-gradient(circle at 50% 0, #ffeb3b, var(--flame-color));
     border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
     animation: flicker 1s ease-in-out infinite, sparks 0.8s infinite;
@@ -168,12 +137,12 @@ body {
     transition: all 0.4s ease;
 }
 
-/* === POSICIONES CORREGIDAS DE LAS LLAMAS === */
-.flame1 { top: 22.5%; left: 30%; }
-.flame2 { top: 20%;   left: 40%; }
-.flame3 { top: 18%;   left: 50%; }
-.flame4 { top: 20%;   left: 60%; }
-.flame5 { top: 22.5%; left: 70%; }
+/* === POSICIONES RE-AJUSTADAS DE LAS LLAMAS === */
+.flame1 { top: 21%; left: 28%; }
+.flame2 { top: 18.5%; left: 38.5%; }
+.flame3 { top: 16.5%; left: 49%; }
+.flame4 { top: 18.5%; left: 59.5%; }
+.flame5 { top: 21%; left: 69%; }
 
 .candle-flame.out {
     transform: scale(0) translateY(5px);
@@ -181,7 +150,6 @@ body {
     animation: none;
     box-shadow: none;
 }
-
 .tap-message {
     margin-top: 25px;
     font-size: clamp(0.75rem, 2.5vw, 1rem);
@@ -193,16 +161,11 @@ body {
 }
 
 
-/* --- EFECTOS DE FUEGOS ARTIFICIALES --- */
-.firework {
-    position: absolute;
-    opacity: 0;
-    animation: firework-burst 2s forwards ease-out;
-}
+/* --- FUEGOS ARTIFICIALES --- */
+.firework { position: absolute; opacity: 0; animation: firework-burst 2s forwards ease-out; }
 .firework-particle {
     position: absolute;
-    width: 6px;
-    height: 6px;
+    width: 6px; height: 6px;
     background-color: var(--particle-color);
     border-radius: 50%;
     opacity: 0;
@@ -213,10 +176,8 @@ body {
 /* --- ESCENA FINAL --- */
 .final-scene {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: var(--bg-color);
     opacity: 0;
     pointer-events: none;
@@ -225,20 +186,17 @@ body {
     justify-content: center;
     align-items: center;
 }
-
 .birthday-card.zoomed .final-scene { opacity: 1; pointer-events: all; }
 .birthday-card.zoomed { transform: scale(1); }
 
 .stars { width: 100%; height: 100%; position: absolute; }
 .star {
     position: absolute;
-    width: 2px;
-    height: 2px;
+    width: 2px; height: 2px;
     background-color: var(--star-color);
     border-radius: 50%;
     animation: twinkle 5s infinite;
 }
-
 .final-text-container {
     height: 100%;
     display: flex;
@@ -248,7 +206,6 @@ body {
     max-width: 800px;
     margin: auto;
 }
-
 .final-text {
     font-family: "Playwrite AR", cursive;
     text-align: center;
@@ -264,62 +221,49 @@ body {
 
 /* --- ANIMACIONES --- */
 @keyframes float-down {
-    0%   { transform: translateY(-100vh) translateX(var(--x-offset, 0px)) rotate(var(--rotation, 0deg)); opacity: 0; }
-    10%  { opacity: 0.9; }
-    90%  { opacity: 0.9; }
-    100% { transform: translateY(100vh) translateX(var(--x-offset, 0px)) rotate(var(--rotation, 0deg)); opacity: 0; }
+    from { transform: translateY(-100vh) translateX(var(--x-offset, 0px)) rotate(var(--rotation, 0deg)); opacity: 1; }
+    to   { transform: translateY(100vh) translateX(var(--x-offset, 0px)) rotate(var(--rotation, 0deg)); opacity: 1; }
 }
-
 @keyframes fall {
     from { top: -20px; transform: rotate(0deg) scale(1); opacity: 1;}
     to   { top: 100vh; transform: rotate(720deg) scale(0.5); opacity: 0;}
 }
-
 @keyframes flicker {
     0%, 100% { transform: scaleY(1) scaleX(1); opacity: 1; }
     50%      { transform: scaleY(0.95) scaleX(1.05); opacity: 0.9; }
 }
-
 @keyframes sparks {
     0%, 100% { box-shadow: 0 0 5px rgba(255, 238, 0, 0.2); }
     50%      { box-shadow: 0 -5px 10px #ffc300, 2px -10px 15px #fefae0, -2px -12px 15px #fefae0; }
 }
-
 @keyframes twinkle {
     0%, 100% { opacity: 1; }
     50%      { opacity: 0.2; }
 }
-
-@keyframes fadeInText {
-    to { opacity: 1; transform: translateY(0); }
-}
-
+@keyframes fadeInText { to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse {
     0%, 100% { opacity: 0.9; transform: scale(1); }
     50%      { opacity: 1; transform: scale(1.05); }
 }
-
 @keyframes firework-burst {
     0%   { opacity: 0; transform: scale(0.1); }
     50%  { opacity: 1; transform: scale(1); }
     100% { opacity: 0; transform: scale(1.2); }
 }
-
 @keyframes particle-fall {
     0%   { opacity: 1; transform: translate(0, 0) scale(1); }
     100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.5); }
 }
 
-
 /* --- RESPONSIVE DESIGN --- */
 @media (max-width: 600px) {
     .cake-container { margin-bottom: 3vh; }
-    /* Ajuste fino de llamas para móviles */
-    .flame1 { top: 23%; left: 29%; }
-    .flame2 { top: 20.5%; left: 39.5%; }
-    .flame3 { top: 18.5%; left: 50%; }
-    .flame4 { top: 20.5%; left: 60.5%; }
-    .flame5 { top: 23%; left: 71%; }
+    /* Ajuste final de llamas para móviles */
+    .flame1 { top: 21.5%; left: 27%; }
+    .flame2 { top: 19%; left: 38%; }
+    .flame3 { top: 17%; left: 49%; }
+    .flame4 { top: 19%; left: 60%; }
+    .flame5 { top: 21.5%; left: 70%; }
 
     .tap-message { font-size: clamp(0.6rem, 3vw, 0.9rem); margin-top: 15px; }
     .final-text { font-size: clamp(0.9rem, 5vw, 1.5rem); }
